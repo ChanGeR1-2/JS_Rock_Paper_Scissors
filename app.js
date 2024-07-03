@@ -1,39 +1,59 @@
 
-playGame();
+let humanScore = 0;
+let computerScore = 0;
 
-function playGame() {
-    let humanScore = 0;
-    let computerScore = 0;
-    function playRound(humanChoice, computerChoice) {
-        if (humanChoice === "rock" && computerChoice === "scissors"
-            || humanChoice === "scissors" && computerChoice === "paper"
-            || humanChoice === "paper" && computerChoice === "rock") {
-            humanScore++;
-            console.log(`You win! ${capitaliseFirstLetter(humanChoice)} beats ${computerChoice}`);
-        } else if (computerChoice === "rock" && humanChoice === "scissors"
-            || computerChoice === "scissors" && humanChoice === "paper"
-            || computerChoice === "paper" && humanChoice === "rock") {
-            computerScore++;
-            console.log(`You lose! ${capitaliseFirstLetter(computerChoice)} beats ${humanChoice}`);
-        } else {
-            console.log("Draw!")
+const buttons = document.querySelector(".buttons");
+
+buttons.addEventListener("click", (event) => {
+    if (!isOver()) playRound(event.target.id, getComputerChoice());
+    else document.querySelector("#round-result").textContent = "Game is Already Over!";
+})
+
+const resultsDiv = document.querySelectorAll(".results span");
+
+function playRound(humanChoice, computerChoice) {
+    let winner;
+    if (humanChoice === "rock" && computerChoice === "scissors"
+        || humanChoice === "scissors" && computerChoice === "paper"
+        || humanChoice === "paper" && computerChoice === "rock") {
+        humanScore++;
+        winner = "player";
+    } else if (computerChoice === "rock" && humanChoice === "scissors"
+        || computerChoice === "scissors" && humanChoice === "paper"
+        || computerChoice === "paper" && humanChoice === "rock") {
+        computerScore++;
+        winner = "computer";
+    }
+
+    resultsDiv.forEach((span) => {
+        switch(span.id) {
+            case "round-result":
+                span.textContent = calculateRoundWinner(humanChoice, computerChoice, winner);
+                break;
+            case "player-score":
+                span.firstElementChild.textContent = humanScore.toString();
+                break;
+            case "computer-score":
+                span.firstElementChild.textContent = computerScore.toString();
+                break;
+            case "final-score":
+                span.textContent = calculateWinner();
+                break;
         }
-    }
+    })
+}
 
-    for (let i = 0; i < 5; i++) {
-        const humanChoice = getHumanChoice();
-        const computerChoice = getComputerChoice();
-        playRound(humanChoice, computerChoice);
-    }
+function isOver() {
+    return humanScore >= 5 || computerScore >= 5;
+}
 
-    console.log(`Score: ${humanScore} : ${computerScore}`);
-
-    if (humanScore > computerScore) {
-        console.log("You win!")
-    } else if (computerScore > humanScore) {
-        console.log('You lose!')
+function calculateRoundWinner(humanChoice, computerChoice, winner) {
+    if (winner === "player") {
+        return `You win! ${capitaliseFirstLetter(humanChoice)} beats ${computerChoice}!`;
+    } else if (winner === "computer") {
+        return `You lose! ${capitaliseFirstLetter(computerChoice)} beats ${humanChoice}!`;
     } else {
-        console.log("Draw!");
+        return "Draw!";
     }
 }
 
@@ -41,6 +61,18 @@ function capitaliseFirstLetter(str) {
     const firstLetter = str.charAt(0);
     const remainingLetters = str.slice(1);
     return firstLetter.toUpperCase() + remainingLetters;
+}
+
+function calculateWinner() {
+    if (isOver()) {
+        if (humanScore > computerScore) {
+            return `You win! The score is ${humanScore}:${computerScore}`;
+        } else {
+            return `You lose! The score is ${humanScore}:${computerScore}`;
+        }
+    } else {
+        return '';
+    }
 }
 
 function getComputerChoice() {
@@ -57,16 +89,4 @@ function getComputerChoice() {
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
-}
-
-function getHumanChoice() {
-    let input;
-    while (true) {
-        input = prompt("Enter rock, paper or scissors").toLowerCase();
-        const regex = new RegExp("rock|paper|scissors")
-        if (regex.test(input)) {
-            break;
-        }
-    }
-    return input;
 }

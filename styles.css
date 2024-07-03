@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto Light", "Ariel", sans-serif;
+    background-color: #e3e3e3
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+}
+
+.header h1 {
+    flex: 0 1 400px;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    border: #bbcdff 5px dashed;
+    border-radius: 10px;
+}
+
+.buttons {
+    display: flex;
+    padding: 50px;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.buttons button {
+    flex: 0 1 100px;
+    background-color: #ff5c50;
+    padding: 25px;
+    border-radius: 25px;
+}
+
+.results {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.results > * {
+    flex: 0 1 100px;
+}
